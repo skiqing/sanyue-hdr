@@ -1,0 +1,638 @@
+{
+   "extensionName": {
+      "description": "Name of the extension",
+      "message": "卅月 HDR"
+   },
+   "extensionDescription": {
+      "description": "Description of the extension",
+      "message": "Uses WebGPU to enhance video and images in real time for an HDR-like look"
+   },
+   "popupTitle": {
+      "description": "Title shown in popup",
+      "message": "卅月 HDR"
+   },
+   "hdrActive": {
+      "description": "Status when HDR is currently rendering",
+      "message": "HDR active"
+   },
+   "hdrInactive": {
+      "description": "Status when HDR is disabled",
+      "message": "HDR inactive"
+   },
+   "sourceHdr": {
+      "description": "Status when video source is already HDR",
+      "message": "HDR source skipped (original playback)"
+   },
+   "noVideoFound": {
+      "description": "Message when no video element is detected",
+      "message": "No video found on this page"
+   },
+   "drmProtected": {
+      "description": "Status when video content is DRM protected",
+      "message": "DRM-protected content — enhancement skipped"
+   },
+   "webgpuNotSupported": {
+      "description": "Error message when WebGPU is unavailable",
+      "message": "This browser does not support WebGPU"
+   },
+   "pageUnavailable": {
+      "description": "Status when extension cannot run on current page",
+      "message": "This page is unavailable"
+   },
+   "renderFailed": {
+      "description": "Status when video cannot be rendered",
+      "message": "This video cannot be processed"
+   },
+   "mappingModeTitle": {
+      "description": "Mapping mode section title",
+      "message": "Mapping mode"
+   },
+   "modeBT2446a": {
+      "description": "BT.2446a mapping mode name",
+      "message": "BT.2446a standard curve"
+   },
+   "modeBT2446aDesc": {
+      "description": "BT.2446a mapping mode description",
+      "message": "ITU-R inverse tone mapping, natural look"
+   },
+   "modePower": {
+      "description": "Power curve mapping mode name",
+      "message": "Custom power curve"
+   },
+   "modePowerDesc": {
+      "description": "Power curve mapping mode description",
+      "message": "More controls, flexible styling"
+   },
+   "presetsTitle": {
+      "description": "Presets section title",
+      "message": "Presets"
+   },
+   "presetHint": {
+      "description": "Preset calibration hint",
+      "message": "Presets are calibrated for Windows SDR brightness at 35%. Set the system slider to 35% for best results"
+   },
+   "advancedSettings": {
+      "description": "Advanced settings link",
+      "message": "Advanced settings"
+   },
+   "qualitySection": {
+      "description": "Quality section title",
+      "message": "Quality"
+   },
+   "performanceSection": {
+      "description": "Performance section title",
+      "message": "Performance"
+   },
+   "presetStandard": {
+      "description": "Standard preset name",
+      "message": "Standard"
+   },
+   "presetStandardDesc": {
+      "description": "Standard preset description",
+      "message": "Peak 1000, fairly soft; for everyday content and animation"
+   },
+   "presetVivid": {
+      "description": "Vivid preset name",
+      "message": "Vivid"
+   },
+   "presetVividDesc": {
+      "description": "Vivid preset description",
+      "message": "Bright, glowing highlights"
+   },
+   "presetSoftNatural": {
+      "description": "Soft natural preset name",
+      "message": "Soft natural"
+   },
+   "presetSoftNaturalDesc": {
+      "description": "Soft natural preset description",
+      "message": "Soft natural glow"
+   },
+   "presetHighDynamic": {
+      "description": "High dynamic preset name",
+      "message": "High dynamic"
+   },
+   "presetHighDynamicDesc": {
+      "description": "High dynamic preset description",
+      "message": "White point 1.4 / midtone 0.50; brighter highlights with detail preserved. Requires 16float HDR canvas"
+   },
+   "presetCinema": {
+      "description": "Cinema preset name",
+      "message": "Cinema"
+   },
+   "presetCinemaDesc": {
+      "description": "Cinema preset description",
+      "message": "White point 1.15 / midtone 0.46; heavier contrast and film look"
+   },
+   "exposure": {
+      "description": "Label for exposure",
+      "message": "Exposure"
+   },
+   "saturation": {
+      "description": "Label for saturation",
+      "message": "Saturation"
+   },
+   "peakBrightness": {
+      "description": "Label for peak brightness",
+      "message": "Peak brightness"
+   },
+   "peakBrightnessDesc": {
+      "description": "Peak brightness description",
+      "message": "Maximum brightness relative to SDR white"
+   },
+   "brightnessThreshold": {
+      "description": "Brightness threshold label",
+      "message": "Brightness threshold"
+   },
+   "maxBoost": {
+      "description": "Max boost label",
+      "message": "Max boost"
+   },
+   "shadowThreshold": {
+      "description": "Shadow threshold label",
+      "message": "Shadow threshold"
+   },
+   "shadowCrush": {
+      "description": "Shadow crush label",
+      "message": "Shadow crush"
+   },
+   "debandEnabled": {
+      "description": "Deband enabled label",
+      "message": "Deband (adaptive)"
+   },
+   "debandEnabledDesc": {
+      "description": "Deband description",
+      "message": "Smooths wide color bands while preserving texture detail"
+   },
+   "debandStrength": {
+      "description": "Deband strength label",
+      "message": "Deband strength"
+   },
+   "renderScale": {
+      "description": "Render scale label",
+      "message": "Render scale"
+   },
+   "enhanceImages": {
+      "description": "Enhance images label",
+      "message": "Enhance images"
+   },
+   "enhanceImagesDesc": {
+      "description": "Enhance images description",
+      "message": "Apply the same effect to large images (cross-origin images may not work)"
+   },
+   "presetFaithful": {
+      "description": "Faithful preset name",
+      "message": "Faithful"
+   },
+   "presetFaithfulDesc": {
+      "description": "Faithful preset description",
+      "message": "White point 1.25 / midtone 0.50; faithful to the SDR look"
+   },
+   "presetClarity": {
+      "description": "Clarity preset name",
+      "message": "Clarity"
+   },
+   "presetClarityDesc": {
+      "description": "Clarity preset description",
+      "message": "White point 1.25 / midtone 0.52; clearer midtones"
+   },
+   "debandVideoOnly": {
+      "description": "Capability note: only applied to video, not images",
+      "message": "Video only: images use a separate path and skip debanding"
+   },
+   "sharpenVideoOnly": {
+      "description": "Capability note: only applied to video, not images",
+      "message": "Video only: images use a separate path and skip CAS sharpening"
+   },
+   "shaderInitFailed": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Shader / pipeline init failed (see extension console)"
+   },
+   "crossOriginBlocked": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Frame reading blocked on this site (CORS); enhancement skipped"
+   },
+   "codecRenderFailed": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "This codec failed to render (fell back to the original)"
+   },
+   "staleContentScript": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Refresh the page (the extension was updated but this page still runs the old script)"
+   },
+   "profileOverwritten": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Overwrote \"{name}\""
+   },
+   "profileSaved": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Saved \"{name}\""
+   },
+   "profileSaveFailed": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Save failed: browser storage unavailable"
+   },
+   "profileApplied": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Applied \"{name}\""
+   },
+   "profileDeleted": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Deleted \"{name}\""
+   },
+   "profileExported": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Exported {count} profiles"
+   },
+   "profileExportEmpty": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "No profiles to export"
+   },
+   "profileImportFailed": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Import failed: file is not valid JSON"
+   },
+   "profileImported": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Imported {count} profiles"
+   },
+   "profileImportedSkipped": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Imported {count} profiles ({skipped} skipped)"
+   },
+   "profileImportEmpty": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "No profiles to import"
+   },
+   "profileImportedName": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Imported profile"
+   },
+   "profileImportSeq": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "Import {seq}"
+   },
+   "needs16floatCanvas": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": " (needs 16float canvas)"
+   },
+   "systemSdrTitle": {
+      "description": "System SDR brightness label",
+      "message": "System SDR brightness"
+   },
+   "systemSdrDesc": {
+      "description": "System SDR brightness control hint",
+      "message": "Matches Windows Settings → System → Display → HDR → SDR content brightness. Dragging only changes reference white; press Save above to write it and recalibrate the highlight ceiling from the physical headroom"
+   },
+   "calibrationNever": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "Not synced yet · using the default 35% calibration"
+   },
+   "calibrationApplied": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "Synced {pct}% ({nits} nits){when}"
+   },
+   "calibrationDerived": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "Adjusted: {fields}"
+   },
+   "calibrationSkipped": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "Your settings kept: {fields}"
+   },
+   "calibrationCeiling": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "highlight ceiling"
+   },
+   "calibrationRollback": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "Save failed, restored the previous settings"
+   },
+   "calibrationDone": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "Synced at {pct}%: reference white {nits} nits"
+   },
+   "applyRecommended": {
+      "description": "Global recommendation (1.2.31)",
+      "message": "Apply recommendation"
+   },
+   "resetRecommended": {
+      "description": "Global recommendation (1.2.31)",
+      "message": "Restore defaults"
+   },
+   "applyRecommendedDesc": {
+      "description": "Global recommendation (1.2.31)",
+      "message": "Confirm display peak and system SDR brightness first, then configure mapping, preset, HDR takeover, dual-layer and debanding in one click. Only these two physical facts tune the result"
+   },
+   "applyRecommendedDone": {
+      "description": "Global recommendation (1.2.32)",
+      "message": "Global recommendation applied: peak {peak} nits · reference white {nits} nits ({pct}%) · white {white}× · ceiling {ceiling}×"
+   },
+   "applyRecommendedTuned": {
+      "description": "Global recommendation (1.2.32)",
+      "message": "fitted to {headroom}× physical headroom"
+   },
+   "applyRecommendedRollback": {
+      "description": "Global recommendation (1.2.31)",
+      "message": "Save failed, restored the previous settings"
+   },
+   "recommendedDialogTitle": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Confirm display values"
+   },
+   "recommendedDialogDesc": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "The browser cannot read these two values: check SDR content brightness in Windows Settings and HDR peak in the monitor specs. They only tune the recommendation, not unrelated settings."
+   },
+   "recommendedPeakLabel": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Display peak brightness"
+   },
+   "recommendedPeakHint": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "HDR peak from the monitor specs, e.g. 400 / 600 / 1000 / 1600; range 400–2000 in 50-nit increments"
+   },
+   "recommendedSdrLabel": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "System SDR brightness"
+   },
+   "recommendedSdrHint": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Windows Settings → System → Display → HDR → SDR content brightness; range 0–100"
+   },
+   "recommendedPreviewEmpty": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Enter both values to preview the tuned parameters"
+   },
+   "recommendedPreview": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Reference white {nits} nits · headroom {headroom}× · white {white}× · ceiling {ceiling}× · gain {gain}×"
+   },
+   "recommendedWarnLowPeak": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Peak is below the {nits} nits reference white; highlights will be clipped. Lower system brightness or check the peak value"
+   },
+   "recommendedWarnTuned": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Headroom is limited; white and highlight ceiling were fitted to the physical limit"
+   },
+   "recommendedWarnNoHdr": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "This display does not report HDR output; white will be capped at 1.25× on an 8-bit canvas"
+   },
+   "recommendedErrPeakRequired": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Enter the display peak brightness"
+   },
+   "recommendedErrSdrRequired": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Enter the system SDR brightness"
+   },
+   "recommendedErrInteger": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Enter a whole number"
+   },
+   "recommendedErrPeakRange": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Peak must be between {min} and {max} nits"
+   },
+   "recommendedErrPeakStep": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Peak must be in {step} nits increments"
+   },
+   "recommendedErrSdrRange": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "System SDR brightness must be between {min} and {max}"
+   },
+   "recommendedCancel": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Cancel"
+   },
+   "recommendedCloseLabel": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Close"
+   },
+   "recommendedConfirm": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Confirm and apply"
+   },
+   "recommendedApplying": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Applying…"
+   },
+   "calibrationReferenceWhite": {
+      "description": "System SDR brightness sync (1.2.32)",
+      "message": "reference white"
+   },
+   "capturePathGreenBandHint": {
+      "description": "Green-band hint (1.2.33)",
+      "message": "If a green band appears at the top, switch this to 2D snapshot (most compatible); Apply recommendation will not overwrite it"
+   },
+   "recommendedKeepSnapshot": {
+      "description": "Green-band hint (1.2.33)",
+      "message": "Capture is set to 2D snapshot and will be kept after applying; this is the workaround for top green bands."
+   },
+   "recommendedAutoGreenBand": {
+      "description": "Green-band hint (1.2.33)",
+      "message": "The recommendation sets capture to Auto; if a top green band appears on AV1/HEVC sources such as Bilibili, switch back to 2D snapshot."
+   },
+   "applyRecommendedGreenBandHint": {
+      "description": "Green-band hint (1.2.33)",
+      "message": "If a top green band appears: set capture to 2D snapshot"
+   },
+   "capturePathTitle": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "Capture path"
+   },
+   "captureAutoName": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "Auto (zero-copy first)"
+   },
+   "captureAutoDesc": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "Regular sources use external zero-copy; padded AV1/HEVC frames switch to 2D snapshot"
+   },
+   "captureSnapshotName": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "2D snapshot (most compatible)"
+   },
+   "captureSnapshotDesc": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "One full-frame copy per frame avoids top green bands; Apply recommendation will not overwrite it"
+   },
+   "captureCopyName": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "Copy texture"
+   },
+   "captureCopyDesc": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "Copy the decoded texture to the GPU without a 2D snapshot"
+   },
+   "captureImportName": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "External only (zero-copy)"
+   },
+   "captureImportDesc": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "Always use external textures; padded frames may show a top green band"
+   },
+   "diagToggle": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "Diagnostics"
+   },
+   "diagPath": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "Capture path"
+   },
+   "diagPadded": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "Coded padding"
+   },
+   "diagGreen": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "Green band"
+   },
+   "diagHdr": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "HDR path"
+   },
+   "diagSave": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "Last save"
+   },
+   "diagUnknown": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "—"
+   },
+   "diagPathValue": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "{path} · {reason}"
+   },
+   "diagPaddedYes": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "Yes · {coded} → {visible}"
+   },
+   "diagPaddedNo": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "No"
+   },
+   "diagGreenPending": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "not checked"
+   },
+   "diagGreenManual": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "manual crop {n}px"
+   },
+   "diagGreenFound": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "{n}px found"
+   },
+   "diagGreenNone": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "none"
+   },
+   "diagHdrValue": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "{mode} · {canvas}"
+   },
+   "diagSaveOk": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "saved · {time}"
+   },
+   "diagSaveFail": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "failed · {reason}"
+   },
+   "diagSaveDirty": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "unsaved changes"
+   },
+   "diagSource": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "Connection"
+   },
+   "diagSourceOk": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "script {v}"
+   },
+   "diagSourceNoVideo": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "script {v} · no active video on this page"
+   },
+   "diagSourceStale": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "script {v} · extension {cur} · reload the page"
+   },
+   "diagSourceLegacy": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "connected · script version unknown (likely stale, reload the page)"
+   },
+   "diagSourceNoReceiver": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "content script not responding · reload the page"
+   },
+   "diagSourceUnsupported": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "enhancement unsupported on this page (chrome:// etc.)"
+   },
+   "diagVideoIndex": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "(video {i}/{n})"
+   },
+   "diagCounts": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "Page counts"
+   },
+   "diagCountsValue": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "videos {videos} · HDR {hdr} · cross-origin {cross} · DRM {drm} · codec failed {fail}"
+   },
+   "diagPipeline": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "Pipeline error"
+   },
+   "diagSaveNone": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "not saved this session"
+   },
+   "diagCopy": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "Copy diagnostics"
+   },
+   "diagCopied": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "Copied to clipboard"
+   },
+   "diagCopyFailed": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "Copy failed, please screenshot"
+   },
+   "diagCopyHead": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "HDR Vision {v} diagnostics"
+   },
+   "diagGreenMoot": {
+      "description": "Green-band semantics (1.2.40)",
+      "message": "n/a · current path has no padding"
+   },
+   "diagGreenVisibleOnly": {
+      "description": "Green-band semantics (1.2.40)",
+      "message": "none · visible area only"
+   },
+   "captureSame": {
+      "description": "Capture path feedback (1.2.41)",
+      "message": "Already selected: {name}"
+   },
+   "captureSaving": {
+      "description": "Capture path feedback (1.2.41)",
+      "message": "Saving: {name}…"
+   },
+   "captureSaved": {
+      "description": "Capture path feedback (1.2.41)",
+      "message": "Saved: {name}"
+   },
+   "captureSaveFailed": {
+      "description": "Capture path feedback (1.2.41)",
+      "message": "Save failed: {name} (change kept, press Save to retry)"
+   }
+}
