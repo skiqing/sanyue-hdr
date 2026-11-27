@@ -1,0 +1,15 @@
+{
+  "name": "hdr-vision",
+  "version": "1.2.42",
+  "private": true,
+  "description": "HDR Vision Chrome extension - dev tooling only (node_modules is not part of the extension bundle)",
+  "scripts": {
+    "test": "node --test tools/test/*.test.js",
+    "lint": "eslint src tools",
+    "check": "npm run lint && npm test && node tools/check-wgsl.js && node tools/check-shader-parity.js && node tools/check-dual-output.js && node tools/probe-knobs.js"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0"
+  }
+}
