@@ -1,0 +1,56 @@
+{
+   "action": {
+      "default_icon": {
+         "128": "icons/icon128.png",
+         "16": "icons/icon16.png",
+         "32": "icons/icon32.png",
+         "48": "icons/icon48.png"
+      },
+      "default_popup": "src/popup/popup.html",
+      "default_title": "__MSG_extensionName__"
+   },
+   "author": "卅月",
+   "background": {
+      "service_worker": "src/background/service-worker.js"
+   },
+   "content_scripts": [
+      {
+         "js": [
+            "src/shared/settings-schema.js",
+            "src/shared/tone-math.js",
+            "src/content/core.js",
+            "src/content/shaders.js",
+            "src/content/utils.js",
+            "src/content/tone-lut.js",
+            "src/content/shared-resources.js",
+            "src/content/renderers.js",
+            "src/content/managers.js",
+            "src/content/controller.js"
+         ],
+         "matches": [
+            "<all_urls>"
+         ],
+         "run_at": "document_idle",
+         "all_frames": false
+      }
+   ],
+   "default_locale": "zh_CN",
+   "minimum_chrome_version": "116",
+   "description": "__MSG_extensionDescription__",
+   "host_permissions": [
+      "<all_urls>"
+   ],
+   "icons": {
+      "128": "icons/icon128.png",
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+   },
+   "manifest_version": 3,
+   "name": "__MSG_extensionName__",
+   "permissions": [
+      "storage",
+      "tabs"
+   ],
+   "version": "1.2.42"
+}
