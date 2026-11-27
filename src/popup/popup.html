@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="popupTitle">卅月 HDR</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="brand">
+        <img src="../../icons/icon128.png" class="brand-logo" alt="卅月 HDR">
+        <div class="brand-text">
+          <div class="brand-name" data-i18n="extensionName">卅月 HDR</div>
+          <div class="brand-sub">Perfect HDR, Awakened in Your Browser.</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="card status-card">
+      <div class="status-row">
+        <div class="status-left">
+          <span class="status-dot" id="status-indicator"></span>
+          <span class="status-label" id="status-text">HDR 未激活</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="hdr-toggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <button class="diag-toggle" id="diag-toggle" type="button" aria-expanded="false"
+              aria-controls="diag-body" data-i18n="diagToggle">诊断详情</button>
+      <div class="diag-body hidden" id="diag-body">
+        <div class="diag-row"><span data-i18n="diagSource">连接状态</span><b id="diag-source">—</b></div>
+        <div class="diag-row"><span data-i18n="diagPath">取帧路径</span><b id="diag-path">—</b></div>
+        <div class="diag-row"><span data-i18n="diagPadded">解码补齐</span><b id="diag-padded">—</b></div>
+        <div class="diag-row"><span data-i18n="diagGreen">绿边检测</span><b id="diag-green">—</b></div>
+        <div class="diag-row"><span data-i18n="diagHdr">HDR 路径</span><b id="diag-hdr">—</b></div>
+        <div class="diag-row"><span data-i18n="diagCounts">页面计数</span><b id="diag-counts">—</b></div>
+        <div class="diag-row diag-row-error hidden" id="diag-error-row">
+          <span data-i18n="diagPipeline">管线错误</span><b id="diag-error">—</b>
+        </div>
+        <div class="diag-row"><span data-i18n="diagSave">最近保存</span><b id="diag-save">—</b></div>
+        <button class="ghost-btn mini diag-copy" id="diag-copy" type="button"
+                data-i18n="diagCopy">复制诊断</button>
+      </div>
+    </section>
+
+    <section class="card tool-card">
+      <div class="calibration-row">
+        <button id="apply-recommended-btn" class="ghost-btn" type="button"
+                aria-haspopup="dialog" aria-controls="recommended-modal" aria-expanded="false"
+                data-i18n="applyRecommended">应用推荐设置</button>
+        <button id="reset-btn" class="ghost-btn" type="button" data-i18n="resetRecommended">恢复默认</button>
+      </div>
+      <p class="setting-desc" data-i18n="applyRecommendedDesc">先确认显示器峰值与系统 SDR 亮度，再一键配置映射方案、预设、HDR 接管、双层与去色带；只有这两项物理事实会参与精细调整</p>
+      <p class="setting-desc setting-desc-strong" id="apply-recommended-status"></p>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title" data-i18n="mappingModeTitle">映射方案</h2>
+      <div class="mode-cards">
+        <button class="mode-card" data-mode="bt2446a">
+          <div class="mode-name" data-i18n="modeBT2446a">BT.2446a 标准曲线</div>
+          <div class="mode-desc" data-i18n="modeBT2446aDesc">ITU-R 标准逆色调映射，观感自然</div>
+        </button>
+        <button class="mode-card" data-mode="power">
+          <div class="mode-name" data-i18n="modePower">自定义幂函数</div>
+          <div class="mode-desc" data-i18n="modePowerDesc">可调参数丰富，风格灵活</div>
+        </button>
+      </div>
+    </section>
+
+    <section class="section" id="presets-section">
+      <h2 class="section-title" data-i18n="presetsTitle">预设</h2>
+      <div class="preset-list" id="preset-list"></div>
+      <p class="hint" data-i18n="presetHint">预设基于 Windows SDR 亮度 35% 校准，使用预设建议将系统 SDR 亮度调节至 35%，以获得最佳效果</p>
+    </section>
+
+    <section class="section" id="capture-section">
+      <h2 class="section-title" data-i18n="capturePathTitle">取帧方式</h2>
+      <div class="preset-list" id="capture-path-list"></div>
+      <p class="setting-desc setting-desc-strong" id="capture-status"></p>
+      <p class="setting-desc setting-desc-warning" data-i18n="capturePathGreenBandHint">顶部出现绿色横条时：把这里改成「2D 快照（最兼容）」即可；本项不会被“应用推荐设置”覆盖</p>
+    </section>
+
+    <section class="section">
+      <button class="advanced-toggle" id="advanced-toggle">
+        <span data-i18n="advancedSettings">高级设置</span>
+        <svg class="chevron" viewBox="0 0 16 16">
+          <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="advanced-panel hidden" id="advanced-panel">
+        <!-- 高级设置改为显式保存：拖动滑块只更新预览，不写盘，避免滑动误触 -->
+        <div class="advanced-save-bar" id="advanced-save-bar">
+          <span class="advanced-save-hint" id="advanced-save-hint">调整参数后点「保存」才会生效</span>
+          <button id="advanced-save" class="ghost-btn mini" type="button">保存设置</button>
+        </div>
+
+        <div class="subsection-title">系统参考</div>
+
+        <div class="setting-item" id="sdr-item">
+          <div class="setting-header">
+            <label for="sdr-slider" data-i18n="systemSdrTitle">系统 SDR 亮度</label>
+            <span class="setting-value">
+              <span id="sdr-slider-value">35%</span>
+              <span class="unit">·</span>
+              <span id="sdr-nits">220 nits</span>
+            </span>
+          </div>
+          <input type="range" id="sdr-slider" value="35" data-range="sdrSliderPercent">
+          <div class="range-scale"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+          <p class="setting-desc" data-i18n="systemSdrDesc">对应 Windows「设置 → 系统 → 显示 → HDR → SDR 内容亮度」。拖滑块只改参考白；点上方「保存设置」后写盘，并按物理余量校准高光上限</p>
+          <p class="setting-desc setting-desc-strong" id="calibration-status"></p>
+          <p class="setting-desc setting-desc-strong" id="sdr-hint"></p>
+        </div>
+
+        <div class="subsection-title">HDR 源（AV1 / HEVC）</div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="hdr-source-mode">HDR 源处理方式</label>
+          </div>
+          <p class="setting-desc">默认 <b>不碰 HDR 视频</b>：扩展完全不介入，交给 Chrome / 系统原生播放。只有想让扩展接管 HDR 观感时，才选下面几项</p>
+          <select id="hdr-source-mode" class="select-input">
+            <option value="off">跳过 · HDR 源原样播放（推荐）</option>
+            <option value="auto">接管 · 按帧信息自动识别</option>
+            <option value="pq">接管 · 强制 PQ（HDR10）</option>
+            <option value="hlg">接管 · 强制 HLG（广播 / B站）</option>
+            <option value="sdr">接管 · 按 SDR 处理</option>
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="hdr-peak">HDR 源输出峰值</label>
+            <span class="setting-value"><span id="hdr-peak-value">1000</span> nits</span>
+          </div>
+          <p class="setting-desc">按显示器实际峰值填写，HDR 源的高光会软限幅到这个亮度</p>
+          <input type="range" id="hdr-peak" value="1000" data-range="hdrPeakNits">
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="crop-top">顶部裁切</label>
+            <span class="setting-value">
+              <input type="number" id="crop-top" value="0" class="number-input" data-range="cropTopPx">
+              <span class="unit">px</span>
+            </span>
+          </div>
+          <p class="setting-desc">0 = 自动检测。若顶部仍有一条绿边/彩边，填 16 再试（1080 的补齐是 8 行，部分编码器补 16 行）；裁切会按比例拉伸 1.5%，肉眼不可见</p>
+        </div>
+
+        <div class="subsection-title">输出</div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="canvas-mode">输出画布</label>
+          </div>
+          <p class="setting-desc">默认「自动」：显示器支持 HDR 时启用 16float 扩展画布，高光可以真正超过 SDR 白；不支持 HDR 或 configure 失败会自动回退 8bit。若出现彩色条带/方块伪影（个别 AMD 驱动），切回 8bit 即可</p>
+          <select id="canvas-mode" class="select-input">
+            <option value="auto">自动（优先 16float HDR 画布，默认）</option>
+            <option value="sdr">8bit 画布（兼容兜底）</option>
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="canvas-encoding">画布编码（高级）</label>
+          </div>
+          <p class="setting-desc">规范要求 HDR 画布写 sRGB 编码值。若画面发灰发白，可切到线性再试一次</p>
+          <select id="canvas-encoding" class="select-input">
+            <option value="srgb">sRGB（规范默认）</option>
+            <option value="linear">线性 scRGB</option>
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="highlight-ceiling">SDR 高光上限</label>
+            <span class="setting-value"><span id="highlight-ceiling-value">1.20</span> ×白</span>
+          </div>
+          <p class="setting-desc">只压高光、不动中间调，只作用于 <b>SDR 内容 + 16float 画布</b>。HDR 源接管时走的是「HDR 源输出峰值」，这里不参与。大面积浅色（白墙、床单、雪景）发死白时往下调；想让灯牌更亮就往上调</p>
+          <input type="range" id="highlight-ceiling" value="1.2" data-range="highlightCeiling">
+          <p class="setting-desc setting-desc-strong" id="highlight-ceiling-hint"></p>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="output-gain">整体强度</label>
+            <span class="setting-value" id="output-gain-value">1.00</span>
+          </div>
+          <p class="setting-desc">所有路径的最后一步，整体乘一个系数：1.00 = 原样，&gt;1 更亮。它排在软膝/高光上限之后，所以会连同高光一起抬高——16float 画布下可超过 SDR 白，8bit 画布会直接裁成纯白。只改总亮度，不改对比与色彩关系</p>
+          <input type="range" id="output-gain" value="1.0" data-range="outputGain">
+        </div>
+
+        <div class="subsection-title">基础参数</div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="exposure" data-i18n="exposure">曝光</label>
+            <span class="setting-value" id="exposure-value">+0.20</span>
+          </div>
+          <input type="range" id="exposure" value="0.2" data-range="exposure">
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="saturation" data-i18n="saturation">饱和度</label>
+            <span class="setting-value" id="saturation-value">1.20</span>
+          </div>
+          <input type="range" id="saturation" value="1.2" data-range="saturation">
+        </div>
+
+        <div class="setting-item" id="peak-brightness-item">
+          <div class="setting-header">
+            <label for="peak-brightness" data-i18n="peakBrightness">峰值亮度</label>
+            <span class="setting-value" id="peak-brightness-value">10.00</span>
+          </div>
+          <p class="setting-desc" id="peak-brightness-desc">相对于 SDR 白的最大亮度倍数（自定义幂函数模式）</p>
+          <input type="range" id="peak-brightness" value="10" data-range="peakBrightness">
+          <p class="setting-desc" id="peak-brightness-actual"></p>
+        </div>
+
+        <div id="bt2446a-settings" class="mode-settings">
+          <div class="setting-item">
+            <div class="setting-header">
+              <label for="target-white">目标白点</label>
+              <span class="setting-value" id="target-white-value">1.20</span>
+            </div>
+            <p class="setting-desc">相对 SDR 白的亮度上限：8bit 画布最高 1.25，16float 最高 2.0。白点是确定值，不会再被内部参数偷偷抬上去</p>
+            <input type="range" id="target-white" value="1.40" data-range="targetWhite">
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-header">
+              <label for="target-mid">目标中调</label>
+              <span class="setting-value" id="target-mid-value">0.50</span>
+            </div>
+            <p class="setting-desc">中灰（输入 0.5）映射到的输出亮度。调高画面更通透，调低更厚重；与白点相互独立。范围 0.30–0.70，与曲线求解器一致</p>
+            <input type="range" id="target-mid" value="0.50" data-range="targetMid">
+          </div>
+
+          <p class="setting-desc" id="tone-targets-actual"></p>
+        </div>
+
+        <div id="power-settings" class="mode-settings">
+          <div class="setting-item">
+            <div class="setting-header">
+              <label for="brightness-threshold" data-i18n="brightnessThreshold">亮度阈值</label>
+              <span class="setting-value" id="brightness-threshold-value">75%</span>
+            </div>
+            <input type="range" id="brightness-threshold" value="75" data-range="brightnessThreshold">
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-header">
+              <label for="max-boost" data-i18n="maxBoost">最大增强</label>
+              <span class="setting-value" id="max-boost-value">1.40x</span>
+            </div>
+            <input type="range" id="max-boost" value="1.4" data-range="maxBoost">
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-header">
+              <label for="shadow-threshold" data-i18n="shadowThreshold">暗部阈值</label>
+              <span class="setting-value" id="shadow-threshold-value">15%</span>
+            </div>
+            <input type="range" id="shadow-threshold" value="15" data-range="shadowThreshold">
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-header">
+              <label for="shadow-crush" data-i18n="shadowCrush">暗部压缩</label>
+              <span class="setting-value" id="shadow-crush-value">0.00</span>
+            </div>
+            <input type="range" id="shadow-crush" value="0" data-range="shadowCrush">
+          </div>
+        </div>
+
+        <div class="subsection-title" data-i18n="qualitySection">画质增强</div>
+
+        <!-- V1.2.5 真双层：base/detail 分解，只压低频、保留局部对比 -->
+        <div class="setting-item" id="dual-layer-item">
+          <div class="setting-header">
+            <label for="dual-layer-toggle">双层合成（真双层）</label>
+            <input type="checkbox" id="dual-layer-toggle" style="width:auto;">
+          </div>
+          <p class="setting-desc">把画面拆成低频亮度（base）和高频细节（detail）：base 走完整色调映射压动态范围，detail 在末端压缩之后叠加，因此压高光不会连局部对比一起压平。每像素 9 次双边采样，仅 BT.2446a + LUT 路径生效；base 与单层一致，开关本身不改变整体亮度。HDR 源接管（PQ / HLG）时整段跳过</p>
+        </div>
+        <div class="setting-item" id="dual-radius-item">
+          <div class="setting-header">
+            <label for="dual-radius">局部半径</label>
+            <span class="setting-value" id="dual-radius-value">12</span>
+          </div>
+          <input type="range" id="dual-radius" value="12" data-range="dualRadius">
+          <p class="setting-desc">估计 base 的邻域半径（显示像素）。越大画面越平缓、局部对比感越强，但亮暗交界的光晕风险也越高</p>
+        </div>
+        <div class="setting-item" id="dual-detail-item">
+          <div class="setting-header">
+            <label for="dual-detail">细节增益</label>
+            <span class="setting-value" id="dual-detail-value">1.00</span>
+          </div>
+          <input type="range" id="dual-detail" value="1" data-range="dualDetail">
+          <p class="setting-desc">detail 层叠加倍数：1.0 = 与单层等价的局部对比，&gt;1 增强纹理与边缘；&lt;1 是柔化而不是中性。只在「双层合成」开启时生效，HDR 源接管时不生效</p>
+        </div>
+
+        <div class="setting-item" id="deband-toggle-item">
+          <div class="setting-header">
+            <label for="deband-toggle" data-i18n="debandEnabled">去色带（色度自适应）</label>
+            <input type="checkbox" id="deband-toggle" style="width:auto;">
+          </div>
+          <p class="setting-desc" data-i18n="debandEnabledDesc">多尺度自适应Deband，消除色带同时保留细节</p>
+          <p class="setting-desc" data-i18n="debandVideoOnly">仅视频：图片走独立渲染路径，不执行去色带</p>
+        </div>
+
+        <div class="setting-item" id="deband-strength-item">
+          <div class="setting-header">
+            <label for="deband-strength" data-i18n="debandStrength">去色带强度</label>
+            <span class="setting-value" id="deband-strength-value">0.008</span>
+          </div>
+          <input type="range" id="deband-strength" value="0.012" data-range="debandThreshold">
+        </div>
+
+        <!-- ★ 新增：锐化（CAS） -->
+        <div class="setting-item" id="sharpen-toggle-item">
+          <div class="setting-header">
+            <label for="sharpen-toggle">锐化（CAS）</label>
+            <input type="checkbox" id="sharpen-toggle" style="width:auto;">
+          </div>
+          <p class="setting-desc">对比度自适应锐化。与"去色带"互斥，只能同时开启一个</p>
+          <p class="setting-desc" data-i18n="sharpenVideoOnly">仅视频：图片走独立渲染路径，不执行 CAS 锐化</p>
+        </div>
+
+        <div class="setting-item" id="sharpen-strength-item">
+          <div class="setting-header">
+            <label for="sharpen-strength">锐化强度</label>
+            <span class="setting-value" id="sharpen-strength-value">0.50</span>
+          </div>
+          <input type="range" id="sharpen-strength" value="0.5" data-range="sharpenStrength">
+        </div>
+
+        <div class="subsection-title" data-i18n="performanceSection">性能</div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="render-scale" data-i18n="renderScale">渲染缩放</label>
+            <span class="setting-value" id="render-scale-value">100%</span>
+          </div>
+          <p class="setting-desc">100% = 原视频分辨率渲染（推荐）；降低可减少 GPU 负载</p>
+          <input type="range" id="render-scale" value="1.0" data-range="renderScale">
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="enhance-images" data-i18n="enhanceImages">图片增强</label>
+            <input type="checkbox" id="enhance-images" style="width:auto;">
+          </div>
+          <p class="setting-desc" data-i18n="enhanceImagesDesc">对网页中大尺寸图片应用相同效果（跨域图片可能不生效）</p>
+        </div>
+
+        <div class="subsection-title">配置快照</div>
+
+        <div class="setting-item">
+          <div class="setting-header">
+            <label for="profile-name">保存当前设置</label>
+            <button id="profile-save" class="ghost-btn mini" type="button">保存</button>
+          </div>
+          <input type="text" id="profile-name" class="text-input" maxlength="24"
+                 placeholder="给这套参数起个名字，如「直播 1.25」">
+          <div class="profile-list" id="profile-list"></div>
+          <div class="profile-actions">
+            <button id="profile-export" class="ghost-btn mini" type="button">导出文件</button>
+            <button id="profile-import" class="ghost-btn mini" type="button">导入文件</button>
+            <input type="file" id="profile-file" accept="application/json,.json" hidden>
+          </div>
+          <p class="setting-desc" id="profile-hint">设置本身会自动保存；这里是存成可切换的快照，方便备份、对比和回滚</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 1.2.32：应用推荐前的输入步骤。两个值浏览器都读不到，只能由用户告知。 -->
+  <div class="modal-overlay" id="recommended-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true"
+         aria-labelledby="recommended-modal-title" aria-describedby="recommended-dialog-desc">
+      <div class="modal-header">
+        <h2 class="modal-title" id="recommended-modal-title" data-i18n="recommendedDialogTitle">应用前确认显示参数</h2>
+        <button class="modal-close" id="recommended-close" type="button" aria-label="关闭">×</button>
+      </div>
+      <p class="modal-desc" id="recommended-dialog-desc" data-i18n="recommendedDialogDesc">这两个值浏览器读不到：请在 Windows 设置里看 SDR 内容亮度，在显示器规格书里看 HDR 峰值。它们只参与推荐值的收敛，不改动其他无关设置。</p>
+      <p class="modal-note" id="recommended-capture-note"></p>
+
+      <div class="modal-field" id="recommended-peak-field">
+        <label for="recommended-peak" data-i18n="recommendedPeakLabel">显示器峰值亮度</label>
+        <div class="modal-input-row">
+          <input type="number" id="recommended-peak" class="number-input modal-number"
+                 data-range="hdrPeakNits" inputmode="numeric"
+                 aria-describedby="recommended-peak-hint recommended-peak-error">
+          <span class="unit">nits</span>
+        </div>
+        <p class="field-hint" id="recommended-peak-hint" data-i18n="recommendedPeakHint">显示器规格书里的 HDR 峰值，例如 400 / 600 / 1000 / 1600，范围 400–2000，按 50 nits 递增</p>
+        <p class="field-error" id="recommended-peak-error" role="alert"></p>
+      </div>
+
+      <div class="modal-field" id="recommended-sdr-field">
+        <label for="recommended-sdr" data-i18n="recommendedSdrLabel">系统 SDR 亮度</label>
+        <div class="modal-input-row">
+          <input type="number" id="recommended-sdr" class="number-input modal-number"
+                 data-range="sdrSliderPercent" inputmode="numeric"
+                 aria-describedby="recommended-sdr-hint recommended-sdr-error">
+          <span class="unit">%</span>
+        </div>
+        <p class="field-hint" id="recommended-sdr-hint" data-i18n="recommendedSdrHint">Windows「设置 → 系统 → 显示 → HDR → SDR 内容亮度」，范围 0–100</p>
+        <p class="field-error" id="recommended-sdr-error" role="alert"></p>
+      </div>
+
+      <div class="modal-preview" id="recommended-preview"></div>
+      <p class="modal-warning" id="recommended-warning" hidden></p>
+      <p class="modal-error" id="recommended-error" role="alert" hidden></p>
+
+      <div class="modal-actions">
+        <button class="ghost-btn" id="recommended-cancel" type="button" data-i18n="recommendedCancel">取消</button>
+        <button class="primary-btn" id="recommended-confirm" type="button" data-i18n="recommendedConfirm">确认并应用</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/settings-schema.js"></script>
+  <script src="../shared/tone-math.js"></script>
+  <script src="popup.js" type="module"></script>
+</body>
+</html>
