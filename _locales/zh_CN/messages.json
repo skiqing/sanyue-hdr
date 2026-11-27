@@ -1,0 +1,638 @@
+{
+   "extensionName": {
+      "description": "Name of the extension",
+      "message": "卅月 HDR"
+   },
+   "extensionDescription": {
+      "description": "Description of the extension",
+      "message": "通过 WebGPU 调用显卡实时计算增强视频与图片，以达到 HDR 的效果"
+   },
+   "popupTitle": {
+      "description": "Title shown in popup",
+      "message": "卅月 HDR"
+   },
+   "hdrActive": {
+      "description": "Status when HDR is currently rendering",
+      "message": "HDR 已激活"
+   },
+   "hdrInactive": {
+      "description": "Status when HDR is disabled",
+      "message": "HDR 未激活"
+   },
+   "sourceHdr": {
+      "description": "Status when video source is already HDR",
+      "message": "HDR 源已跳过（原样播放）"
+   },
+   "noVideoFound": {
+      "description": "Message when no video element is detected",
+      "message": "此页面未找到视频"
+   },
+   "drmProtected": {
+      "description": "Status when video content is DRM protected",
+      "message": "受保护内容（DRM），已跳过增强"
+   },
+   "webgpuNotSupported": {
+      "description": "Error message when WebGPU is unavailable",
+      "message": "此浏览器不支持 WebGPU"
+   },
+   "pageUnavailable": {
+      "description": "Status when extension cannot run on current page",
+      "message": "此页面不可用"
+   },
+   "renderFailed": {
+      "description": "Status when video cannot be rendered",
+      "message": "无法处理此视频"
+   },
+   "mappingModeTitle": {
+      "description": "Mapping mode section title",
+      "message": "映射方案"
+   },
+   "modeBT2446a": {
+      "description": "BT.2446a mapping mode name",
+      "message": "BT.2446a 标准曲线"
+   },
+   "modeBT2446aDesc": {
+      "description": "BT.2446a mapping mode description",
+      "message": "ITU-R 标准逆色调映射，观感自然"
+   },
+   "modePower": {
+      "description": "Power curve mapping mode name",
+      "message": "自定义幂函数"
+   },
+   "modePowerDesc": {
+      "description": "Power curve mapping mode description",
+      "message": "可调参数丰富，风格灵活"
+   },
+   "presetsTitle": {
+      "description": "Presets section title",
+      "message": "预设"
+   },
+   "presetHint": {
+      "description": "Preset calibration hint",
+      "message": "预设基于 Windows SDR 亮度 35% 校准，使用预设建议将系统 SDR 亮度调节至 35%，以获得最佳效果"
+   },
+   "advancedSettings": {
+      "description": "Advanced settings link",
+      "message": "高级设置"
+   },
+   "qualitySection": {
+      "description": "Quality section title",
+      "message": "画质增强"
+   },
+   "performanceSection": {
+      "description": "Performance section title",
+      "message": "性能"
+   },
+   "presetStandard": {
+      "description": "Standard preset name",
+      "message": "标准"
+   },
+   "presetStandardDesc": {
+      "description": "Standard preset description",
+      "message": "Peak 1000，相对柔和，适合日常内容、动画等"
+   },
+   "presetVivid": {
+      "description": "Vivid preset name",
+      "message": "鲜艳"
+   },
+   "presetVividDesc": {
+      "description": "Vivid preset description",
+      "message": "明亮、发光的高光"
+   },
+   "presetSoftNatural": {
+      "description": "Soft natural preset name",
+      "message": "柔和自然"
+   },
+   "presetSoftNaturalDesc": {
+      "description": "Soft natural preset description",
+      "message": "柔和自然的光晕"
+   },
+   "presetHighDynamic": {
+      "description": "High dynamic preset name",
+      "message": "高动态"
+   },
+   "presetHighDynamicDesc": {
+      "description": "High dynamic preset description",
+      "message": "白点 1.4 / 中调 0.50，高光更亮但保留细节；需 16float HDR 画布，8bit 下置灰不可用"
+   },
+   "presetCinema": {
+      "description": "Cinema preset name",
+      "message": "电影"
+   },
+   "presetCinemaDesc": {
+      "description": "Cinema preset description",
+      "message": "白点 1.15 / 中调 0.46，厚重对比与电影感"
+   },
+   "exposure": {
+      "description": "Label for exposure",
+      "message": "曝光"
+   },
+   "saturation": {
+      "description": "Label for saturation",
+      "message": "饱和度"
+   },
+   "peakBrightness": {
+      "description": "Label for peak brightness",
+      "message": "峰值亮度"
+   },
+   "peakBrightnessDesc": {
+      "description": "Peak brightness description",
+      "message": "相对于 SDR 白的最大亮度倍数（自定义幂函数模式）"
+   },
+   "brightnessThreshold": {
+      "description": "Brightness threshold label",
+      "message": "亮度阈值"
+   },
+   "maxBoost": {
+      "description": "Max boost label",
+      "message": "最大增强"
+   },
+   "shadowThreshold": {
+      "description": "Shadow threshold label",
+      "message": "暗部阈值"
+   },
+   "shadowCrush": {
+      "description": "Shadow crush label",
+      "message": "暗部压缩"
+   },
+   "debandEnabled": {
+      "description": "Deband enabled label",
+      "message": "去色带（自适应）"
+   },
+   "debandEnabledDesc": {
+      "description": "Deband description",
+      "message": "自适应抹平渐变区域的大范围色带，保护纹理细节"
+   },
+   "debandStrength": {
+      "description": "Deband strength label",
+      "message": "去色带强度"
+   },
+   "renderScale": {
+      "description": "Render scale label",
+      "message": "渲染缩放"
+   },
+   "enhanceImages": {
+      "description": "Enhance images label",
+      "message": "图片增强"
+   },
+   "enhanceImagesDesc": {
+      "description": "Enhance images description",
+      "message": "对网页中大尺寸图片应用相同效果（跨域图片可能不生效）"
+   },
+   "presetFaithful": {
+      "description": "Faithful preset name",
+      "message": "保真"
+   },
+   "presetFaithfulDesc": {
+      "description": "Faithful preset description",
+      "message": "白点 1.25 / 中调 0.50，忠实还原 SDR 观感"
+   },
+   "presetClarity": {
+      "description": "Clarity preset name",
+      "message": "通透"
+   },
+   "presetClarityDesc": {
+      "description": "Clarity preset description",
+      "message": "白点 1.25 / 中调 0.52，中间调更通透"
+   },
+   "debandVideoOnly": {
+      "description": "Capability note: only applied to video, not images",
+      "message": "仅视频：图片走独立渲染路径，不执行去色带"
+   },
+   "sharpenVideoOnly": {
+      "description": "Capability note: only applied to video, not images",
+      "message": "仅视频：图片走独立渲染路径，不执行 CAS 锐化"
+   },
+   "shaderInitFailed": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "着色器/管线初始化失败（详见扩展控制台）"
+   },
+   "crossOriginBlocked": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "此站点禁止读帧（跨域），不做增强"
+   },
+   "codecRenderFailed": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "此编码渲染失败（已回退原画）"
+   },
+   "staleContentScript": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "请刷新页面后重试（扩展已更新，页面脚本仍是旧版）"
+   },
+   "profileOverwritten": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "已覆盖「{name}」"
+   },
+   "profileSaved": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "已保存「{name}」"
+   },
+   "profileSaveFailed": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "保存失败：浏览器存储不可用"
+   },
+   "profileApplied": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "已应用「{name}」"
+   },
+   "profileDeleted": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "已删除「{name}」"
+   },
+   "profileExported": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "已导出 {count} 个配置"
+   },
+   "profileExportEmpty": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "当前没有配置，导出的是空列表"
+   },
+   "profileImportFailed": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "导入失败：文件不是有效的 JSON"
+   },
+   "profileImported": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "已导入 {count} 个配置"
+   },
+   "profileImportedSkipped": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "已导入 {count} 个配置（跳过 {skipped} 项）"
+   },
+   "profileImportEmpty": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "没有可导入的配置"
+   },
+   "profileImportedName": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "导入配置"
+   },
+   "profileImportSeq": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "导入 {seq}"
+   },
+   "needs16floatCanvas": {
+      "description": "Localized UI text (Stage 4 / P3-5)",
+      "message": "（需 16float 画布）"
+   },
+   "systemSdrTitle": {
+      "description": "System SDR brightness label",
+      "message": "系统 SDR 亮度"
+   },
+   "systemSdrDesc": {
+      "description": "系统 SDR 亮度控件说明",
+      "message": "对应 Windows「设置 → 系统 → 显示 → HDR → SDR 内容亮度」。拖滑块只改参考白；点上方「保存设置」后写盘，并按物理余量校准高光上限"
+   },
+   "calibrationNever": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "尚未同步系统亮度 · 当前按默认 35% 校准"
+   },
+   "calibrationApplied": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "已同步 {pct}%（{nits} nits）{when}"
+   },
+   "calibrationDerived": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "已调整：{fields}"
+   },
+   "calibrationSkipped": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "保留你的设置：{fields}"
+   },
+   "calibrationCeiling": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "高光上限"
+   },
+   "calibrationRollback": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "保存失败，已恢复同步前的设置"
+   },
+   "calibrationDone": {
+      "description": "System SDR brightness sync (1.2.26)",
+      "message": "已按 {pct}% 同步：参考白 {nits} nits"
+   },
+   "applyRecommended": {
+      "description": "Global recommendation (1.2.31)",
+      "message": "应用推荐设置"
+   },
+   "resetRecommended": {
+      "description": "Global recommendation (1.2.31)",
+      "message": "恢复默认"
+   },
+   "applyRecommendedDesc": {
+      "description": "Global recommendation (1.2.31)",
+      "message": "先确认显示器峰值与系统 SDR 亮度，再一键配置映射方案、预设、HDR 接管、双层与去色带；只有这两项物理事实会参与精细调整"
+   },
+   "applyRecommendedDone": {
+      "description": "Global recommendation (1.2.32)",
+      "message": "已应用全局推荐：峰值 {peak} nits · 参考白 {nits} nits（{pct}%）· 白点 {white}× · 高光上限 {ceiling}×"
+   },
+   "applyRecommendedTuned": {
+      "description": "Global recommendation (1.2.32)",
+      "message": "已按物理余量 {headroom}× 收敛"
+   },
+   "applyRecommendedRollback": {
+      "description": "Global recommendation (1.2.31)",
+      "message": "保存失败，已恢复原设置"
+   },
+   "recommendedDialogTitle": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "应用前确认显示参数"
+   },
+   "recommendedDialogDesc": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "这两个值浏览器读不到：请在 Windows 设置里看 SDR 内容亮度，在显示器规格书里看 HDR 峰值。它们只参与推荐值的收敛，不改动其他无关设置。"
+   },
+   "recommendedPeakLabel": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "显示器峰值亮度"
+   },
+   "recommendedPeakHint": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "显示器规格书里的 HDR 峰值，例如 400 / 600 / 1000 / 1600，范围 400–2000，按 50 nits 递增"
+   },
+   "recommendedSdrLabel": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "系统 SDR 亮度"
+   },
+   "recommendedSdrHint": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "Windows「设置 → 系统 → 显示 → HDR → SDR 内容亮度」，范围 0–100"
+   },
+   "recommendedPreviewEmpty": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "填入两个数值后，这里会显示将写入的精细参数"
+   },
+   "recommendedPreview": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "参考白 {nits} nits · 余量 {headroom}× · 白点 {white}× · 高光上限 {ceiling}× · 强度 {gain}×"
+   },
+   "recommendedWarnLowPeak": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "峰值低于参考白 {nits} nits，高光会被面板裁切；请调低系统亮度或核对峰值"
+   },
+   "recommendedWarnTuned": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "余量不足，白点 / 高光上限已按物理上限收敛"
+   },
+   "recommendedWarnNoHdr": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "当前显示器未报告 HDR 输出，白点会按 8bit 画布收敛到 1.25×"
+   },
+   "recommendedErrPeakRequired": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "请输入显示器峰值亮度"
+   },
+   "recommendedErrSdrRequired": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "请输入系统 SDR 亮度"
+   },
+   "recommendedErrInteger": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "请输入整数"
+   },
+   "recommendedErrPeakRange": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "峰值需在 {min}–{max} nits 之间"
+   },
+   "recommendedErrPeakStep": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "峰值需按 {step} nits 递增"
+   },
+   "recommendedErrSdrRange": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "系统 SDR 亮度需在 {min}–{max} 之间"
+   },
+   "recommendedCancel": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "取消"
+   },
+   "recommendedCloseLabel": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "关闭"
+   },
+   "recommendedConfirm": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "确认并应用"
+   },
+   "recommendedApplying": {
+      "description": "Recommendation input dialog (1.2.32)",
+      "message": "正在应用…"
+   },
+   "calibrationReferenceWhite": {
+      "description": "System SDR brightness sync (1.2.32)",
+      "message": "系统参考白"
+   },
+   "capturePathGreenBandHint": {
+      "description": "Green-band hint (1.2.33)",
+      "message": "顶部出现绿色横条时：把这里改成「2D 快照（最兼容）」即可；本项不会被“应用推荐设置”覆盖"
+   },
+   "recommendedKeepSnapshot": {
+      "description": "Green-band hint (1.2.33)",
+      "message": "当前取帧是「2D 快照」，应用推荐后会保留；这是顶部绿边的兼容设置。"
+   },
+   "recommendedAutoGreenBand": {
+      "description": "Green-band hint (1.2.33)",
+      "message": "推荐会把取帧设为「自动」；B 站等 AV1/HEVC 源若出现顶部绿边，请手动改回「2D 快照」。"
+   },
+   "applyRecommendedGreenBandHint": {
+      "description": "Green-band hint (1.2.33)",
+      "message": "若出现顶部绿边：取帧改 2D 快照"
+   },
+   "capturePathTitle": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "取帧方式"
+   },
+   "captureAutoName": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "自动（零拷贝优先）"
+   },
+   "captureAutoDesc": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "常规源走 external 零拷贝；AV1/HEVC 补齐帧自动切 2D 快照"
+   },
+   "captureSnapshotName": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "2D 快照（最兼容）"
+   },
+   "captureSnapshotDesc": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "每帧做一次全画面拷贝，规避顶部绿边；应用推荐不会覆盖"
+   },
+   "captureCopyName": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "直拷纹理"
+   },
+   "captureCopyDesc": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "直接复制解码纹理到 GPU，不做 2D 快照"
+   },
+   "captureImportName": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "仅 external（零拷贝）"
+   },
+   "captureImportDesc": {
+      "description": "Capture path cards (1.2.36)",
+      "message": "始终用 external 纹理；补齐帧可能带顶部绿边"
+   },
+   "diagToggle": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "诊断详情"
+   },
+   "diagPath": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "取帧路径"
+   },
+   "diagPadded": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "解码补齐"
+   },
+   "diagGreen": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "绿边检测"
+   },
+   "diagHdr": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "HDR 路径"
+   },
+   "diagSave": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "最近保存"
+   },
+   "diagUnknown": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "—"
+   },
+   "diagPathValue": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "{path} · {reason}"
+   },
+   "diagPaddedYes": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "是 · {coded} → {visible}"
+   },
+   "diagPaddedNo": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "否"
+   },
+   "diagGreenPending": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "未检测"
+   },
+   "diagGreenManual": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "手工裁切 {n}px"
+   },
+   "diagGreenFound": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "检出 {n}px"
+   },
+   "diagGreenNone": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "未检出"
+   },
+   "diagHdrValue": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "{mode} · {canvas}"
+   },
+   "diagSaveOk": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "成功 · {time}"
+   },
+   "diagSaveFail": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "失败 · {reason}"
+   },
+   "diagSaveDirty": {
+      "description": "Diagnostics (1.2.38)",
+      "message": "有未保存改动"
+   },
+   "diagSource": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "连接状态"
+   },
+   "diagSourceOk": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "脚本 {v}"
+   },
+   "diagSourceNoVideo": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "脚本 {v} · 本页无有效视频"
+   },
+   "diagSourceStale": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "脚本 {v} · 扩展 {cur} · 请刷新页面"
+   },
+   "diagSourceLegacy": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "已连接 · 脚本版本未知（可能是旧版，刷新页面）"
+   },
+   "diagSourceNoReceiver": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "内容脚本未响应 · 刷新页面后重试"
+   },
+   "diagSourceUnsupported": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "当前页面不支持增强（chrome:// 等）"
+   },
+   "diagVideoIndex": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "（第 {i}/{n} 个视频）"
+   },
+   "diagCounts": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "页面计数"
+   },
+   "diagCountsValue": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "视频 {videos} · HDR {hdr} · 跨域 {cross} · DRM {drm} · 解码失败 {fail}"
+   },
+   "diagPipeline": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "管线错误"
+   },
+   "diagSaveNone": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "本次未保存"
+   },
+   "diagCopy": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "复制诊断"
+   },
+   "diagCopied": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "已复制到剪贴板"
+   },
+   "diagCopyFailed": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "复制失败，请截图"
+   },
+   "diagCopyHead": {
+      "description": "Diagnostics completion (1.2.39)",
+      "message": "HDR Vision {v} 诊断"
+   },
+   "diagGreenMoot": {
+      "description": "Green-band semantics (1.2.40)",
+      "message": "不适用 · 当前路径无填充行"
+   },
+   "diagGreenVisibleOnly": {
+      "description": "Green-band semantics (1.2.40)",
+      "message": "未检出 · 仅可见区"
+   },
+   "captureSame": {
+      "description": "Capture path feedback (1.2.41)",
+      "message": "已是当前选择：{name}"
+   },
+   "captureSaving": {
+      "description": "Capture path feedback (1.2.41)",
+      "message": "正在保存：{name}…"
+   },
+   "captureSaved": {
+      "description": "Capture path feedback (1.2.41)",
+      "message": "已保存：{name}"
+   },
+   "captureSaveFailed": {
+      "description": "Capture path feedback (1.2.41)",
+      "message": "保存失败：{name}（改动仍在，点「保存设置」重试）"
+   }
+}
