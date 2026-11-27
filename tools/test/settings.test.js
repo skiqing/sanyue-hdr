@@ -846,6 +846,7 @@ function loadControllerHarness(adapterBehaviour) {
     MESSAGE_TYPES: { GET_SETTINGS: 'GET_SETTINGS', SETTINGS_UPDATED: 'SETTINGS_UPDATED', GET_STATUS: 'GET_STATUS' },
     ADAPTER_OPTIONS: undefined,
     pipelineErrorHandler: null,
+    CONTENT_DEPS_MISSING: [],  // P4-2：getDiagnostics 现在会带上依赖状态
     // P2-7：错误预算与延迟重建
     GPU_ERROR_LIMIT: 20,
     GPU_ERROR_WINDOW_MS: 10000,
@@ -2225,6 +2226,35 @@ test('P3-9 行为：依赖断言在齐全时通过，缺文件时点名', () => 
   assert.equal(missing[0], 'VideoRenderer', '缺哪个就报哪个');
 });
 
+test('P4-2 行为：合法取值为 undefined 的符号不得被判为依赖缺失（Windows 真机）', () => {
+  const start = content.indexOf('function assertContentDependencies() {');
+  const end = content.indexOf('const CONTENT_DEPS_MISSING', start);
+  assert.ok(start > 0 && end > start, '依赖断言函数应存在');
+  const block = content.slice(start, end);
+  const names = [...block.matchAll(/^\s{4}(\w+): typeof/gm)].map((m) => m[1]);
+
+  // 真机回归：1.2.42 把 ADAPTER_OPTIONS 放进表里，Windows 上该常量合法为
+  // undefined，typeof 无法区分「声明为 undefined」与「未声明」，于是每台
+  // Windows 机器都报「依赖缺失 · ADAPTER_OPTIONS」。这里直接复现该取值。
+  assert.ok(!names.includes('ADAPTER_OPTIONS'),
+    'ADAPTER_OPTIONS 在 Windows 上合法为 undefined，不能用 typeof 做存在性探针');
+  const utilsSrc = read('src/content/utils.js');
+  assert.match(utilsSrc, /const ADAPTER_OPTIONS = \(\(\) => \{/);
+  assert.match(utilsSrc, /return undefined;/, 'utils.js 必须保留 Windows 分支返回 undefined');
+
+  const ctx = { console: { error() {} } };
+  for (const name of names) ctx[name] = {};
+  ctx.globalThis = ctx;
+  vm.createContext(ctx);
+  vm.runInContext('const ADAPTER_OPTIONS = undefined;', ctx);
+  vm.runInContext(block + '\nthis.fn = assertContentDependencies;', ctx);
+  assert.equal(ctx.fn().length, 0, 'Windows 取值下不应报任何依赖缺失');
+
+  // 探针本身不能失效：真正缺文件时仍要能点名
+  delete ctx.VideoRenderer;
+  assert.deepEqual([...ctx.fn()], ['VideoRenderer']);
+});
+
 test('P3-6：package.json 提供 lint/test/check 三个入口', () => {
   const pkg = JSON.parse(read('package.json'));
   assert.equal(pkg.scripts.lint, 'eslint src tools');
@@ -3460,4 +3490,235 @@ test('取帧卡片反馈：已选中 / 保存中 / 已保存 / 失败各有文�
       assert.ok(msgs[key] && msgs[key].message, loc + ' 缺少 ' + key);
     }
   }
+});
+
+// ---------- P4-2：uniform 布局三文件隐式契约的静态校验 ----------
+// 背景：UNIFORM_FIELDS(shaders.js) → U 索引 → computeUniformData(utils.js) 的
+// 46 处 out[U.xxx] → WGSL struct。字段名写错时 U.xxx === undefined，
+// out[undefined] = v 是静默失败（写到数组字符串属性上），表现为画面异常而非报错。
+// 这里把契约变成可校验的：任何字段引用必须从 UNIFORM_FIELDS 中来。
+
+function parseUniformFields() {
+  const m = content.match(/const UNIFORM_FIELDS = \[([\s\S]*?)\];/);
+  assert.ok(m, '应能定位 UNIFORM_FIELDS 定义');
+  return [...m[1].matchAll(/'([A-Za-z0-9_]+)'/g)].map((x) => x[1]);
+}
+
+test('P4-2 契约：computeUniformData 的所有 U.xxx 引用都在 UNIFORM_FIELDS 中', () => {
+  const fields = parseUniformFields();
+  const declared = new Set(fields);
+  assert.ok(fields.length >= 36 && fields.length <= 64, '字段数应在 shader 自检范围内');
+
+  // U 必须由字段表生成，不能手写索引表（手写会与字段表漂移）
+  assert.ok(/const U = Object\.fromEntries\(UNIFORM_FIELDS\.map\(/.test(content),
+    'U 必须由 UNIFORM_FIELDS 推导，禁止手写索引');
+
+  // 提取 computeUniformData 函数体
+  const start = content.indexOf('function computeUniformData(');
+  const end = content.indexOf('\n}\n', start);
+  assert.ok(start > 0 && end > start, '应能定位 computeUniformData');
+  const body = content.slice(start, end);
+
+  const refs = [...body.matchAll(/\bU\.([A-Za-z0-9_]+)/g)].map((x) => x[1]);
+  assert.ok(refs.length >= 40, '应覆盖主要 uniform 字段，实际 ' + refs.length);
+
+  const unknown = [...new Set(refs)].filter((name) => !declared.has(name));
+  assert.deepEqual(unknown, [], '存在未声明的 uniform 字段引用（会静默失败）: ' + unknown.join(', '));
+
+  // 反向：字段表里每个非占位字段都应被赋值（_pad* 单独放行）
+  const assigned = new Set(refs);
+  const neverAssigned = fields.filter((f) => !f.startsWith('_pad') && !assigned.has(f));
+  assert.deepEqual(neverAssigned, [], '字段已声明但从未被 computeUniformData 赋值: ' + neverAssigned.join(', '));
+});
+
+test('P4-2 契约行为：uniform 字段真实写入浮点数组且不产生字符串属性', () => {
+  const fields = parseUniformFields();
+
+  // WGSL struct 由 UNIFORM_FIELDS 运行时生成（单一来源），这里验证生成式而非字面字段
+  const m = content.match(/const uniformsDecl = `([\s\S]*?)`;/);
+  assert.ok(m, '应能定位 uniformsDecl');
+  assert.ok(/\$\{UNIFORM_FIELDS\.map/.test(m[1]),
+    'WGSL struct 必须由 UNIFORM_FIELDS 生成，禁止另写一份字段表');
+
+  // 用整包运行时执行真实 computeUniformData（所有依赖已在 bundle 内）。
+  // 切片 vm 会因 resolveToneTargets 等前置函数缺失而失败，整包才是线上真实形态。
+  const R = loadRenderRuntime();
+  const U = R.U;
+  const out = new Float32Array(fields.length);
+  const settings = S.normalizeSettings({});
+  R.computeUniformData(settings, 1920, 1080, 1 / 1920, 1 / 1080, 0, null, out, null);
+
+  // 每个非占位字段都应被写入有限数值
+  const bad = fields.filter((f) => !f.startsWith('_pad') && !Number.isFinite(out[U[f]]));
+  assert.deepEqual(bad, [], '以下字段未被写入有效值: ' + bad.join(', '));
+
+  // 关键字段的实际取值（验证写入的是正确索引，不是错位）
+  assert.equal(out[U.exposureMultiplier], 1, 'exposure=0 → 2^0 = 1');
+  assert.ok(out[U.saturation] > 0, 'saturation 应被写入正值');
+  assert.equal(out[U.outputGain], 1, '默认整体强度应为 1');
+  assert.equal(out[U.canvasWidth], 1920);
+  assert.equal(out[U.canvasHeight], 1080);
+
+  // ★ 静默失败的核心证据：Float32Array 上不应出现字符串键
+  const strKeys = Object.keys(out).filter((k) => !/^\d+$/.test(k));
+  assert.deepEqual(strKeys, [], '出现字符串属性，说明某个 U.xxx 未定义（字段名写错）');
+
+  // 缓冲大小必须从字段数推导，禁止硬编码
+  assert.ok(/const UNIFORM_FLOATS = UNIFORM_FIELDS\.length;/.test(content));
+  assert.ok(/const UNIFORM_BYTES = UNIFORM_FLOATS \* 4;/.test(content));
+});
+
+test('P4-2 契约：依赖断言覆盖所有被跨文件引用的共享符号', () => {
+  const start = content.indexOf('function assertContentDependencies() {');
+  const end = content.indexOf('const CONTENT_DEPS_MISSING', start);
+  const block = content.slice(start, end);
+  const names = [...block.matchAll(/^\s{4}(\w+): typeof/gm)].map((m) => m[1]);
+
+  // 首版 17 项；补齐后应覆盖 shared-resources / tone-lut / core 的关键符号
+  assert.ok(names.length >= 38, '依赖断言应覆盖 38+ 符号，实际 ' + names.length);
+  for (const required of [
+    'ToneLutManager', 'videoShaderCode', 'imageShaderCode',
+    'UNIFORM_FLOATS', 'LUT_SIZE', 'STATUS', 'MESSAGE_TYPES',
+    'pickTier', 'debouncedScan', 'GPU_ERROR_LIMIT',
+  ]) {
+    assert.ok(names.includes(required), '依赖断言缺少: ' + required);
+  }
+
+  // 断言结果必须进入诊断，真机才能自证
+  assert.ok(/depsMissing:/.test(content), 'getDiagnostics 应暴露 depsMissing');
+});
+
+// ---------- P4-2：popup ↔ SW ↔ content 端到端往返（补 §23 点名的最大盲区） ----------
+// 首版测试把三层各自关在独立 vm ctx 里，从没有一条用例把
+// SET_SETTINGS → storage + 广播 → content 消费 → GET_STATUS 回传串起来。
+// 这里用同一条消息总线串起三层，验证配置能闭环到达渲染器诊断。
+
+test('P4-2 行为：设置从 popup 写盘、广播到 content、再由 GET_STATUS 回到 popup', async () => {
+  // ---- 共享消息总线 ----
+  const store = {};
+  const listeners = [];
+  const sent = [];
+  const tabMessages = [];
+  const chromeStub = {
+    runtime: {
+      getManifest: () => ({ version: '1.2.42' }),
+      sendMessage: (msg) => {
+        sent.push(msg);
+        // SW 的监听器返回 true 表示异步响应，真实响应走 sendResponse 回调
+        let response;
+        for (const fn of listeners) {
+          const reply = (r) => { response = r; };
+          fn(msg, {}, reply);
+        }
+        // 等一个 tick 让 handleMessage 的 Promise 兑现并回调 reply
+        return new Promise((resolve) => setTimeout(() => resolve(response || {}), 0));
+      },
+      onMessage: { addListener: (fn) => listeners.push(fn) },
+    },
+    storage: {
+      local: {
+        get: async (key) => ({ [key]: store[key] }),
+        set: async (obj) => Object.assign(store, obj),
+      },
+      onChanged: { addListener: () => {} },
+    },
+    tabs: {
+      query: async () => [{ id: 1, url: 'https://example.com/video' }],
+      sendMessage: (tabId, msg) => {
+        tabMessages.push({ tabId, msg });
+        return Promise.resolve();
+      },
+      onActivated: { addListener: () => {} },
+      onUpdated: { addListener: () => {} },
+    },
+    action: { setBadgeText: async () => {}, setBadgeBackgroundColor: async () => {} },
+  };
+
+  // ---- 加载 SW（真实 handleMessage / enqueueSettingsUpdate / notifyContentScripts）----
+  // importScripts 加载的 shared 符号用测试里已初始化的 S / HdrToneMath 注入
+  const swCtx = {
+    chrome: chromeStub, console, Promise, setTimeout, clearTimeout,
+    HDRSettings: S,
+    HdrToneMath: ctx.HdrToneMath,
+    importScripts: () => {},
+  };
+  swCtx.globalThis = swCtx;
+  vm.createContext(swCtx);
+  vm.runInContext(sw, swCtx);
+  await swCtx.handleMessage({ type: 'GET_SETTINGS' }); // 触发一次读，确认初始状态
+
+  // ---- 加载 content controller（真实 onMessage + getDiagnostics）----
+  const h = loadControllerHarness(async (adapter) => adapter);
+  const controller = new h.Ctrl();
+  controller.settings = S.normalizeSettings({});
+
+  // ---- popup 侧：saveNow 发 SET_SETTINGS ----
+  const saveCtx = makeSaveContext({ response: { success: true } });
+  saveCtx.ctx.chrome.runtime.sendMessage = chromeStub.runtime.sendMessage;
+  const changed = saveCtx.ctx.settings;
+  changed.capturePath = 'snapshot';
+  changed.outputGain = 1.35;
+  saveCtx.ctx.api.save();
+  await new Promise((r) => setTimeout(r, 0));
+
+  // ---- 断言 1：写盘落库，且带上版本号 ----
+  assert.ok(store.hdr_vision_global, '配置应写入 storage');
+  assert.equal(store.hdr_vision_global.capturePath, 'snapshot');
+  assert.equal(store.hdr_vision_global.outputGain, 1.35);
+  assert.ok(store.hdr_vision_global._version, '保存时应写入 _version');
+
+  // ---- 断言 2：广播到 content，且只发主 frame ----
+  const updated = tabMessages.find((m) => m.msg.type === 'SETTINGS_UPDATED');
+  assert.ok(updated, '应向标签页广播 SETTINGS_UPDATED');
+  assert.equal(updated.msg.data.settings.capturePath, 'snapshot');
+  assert.equal(updated.tabId, 1);
+
+  // ---- 断言 3：content 收到广播后，GET_STATUS 带回 diag 与版本 ----
+  controller.onSettingsUpdated(updated.msg.data.settings);
+  await new Promise((r) => setTimeout(r, 0));
+  // 直接调 controller 的诊断方法（GET_STATUS 分支的数据来源）
+  const status = controller.getStatus();
+  const diag = controller.getDiagnostics();
+  assert.equal(typeof status, 'string', 'getStatus 返回状态枚举');
+  assert.ok(diag && typeof diag === 'object', 'getDiagnostics 返回对象');
+  assert.ok('depsMissing' in diag, '诊断应携带依赖状态字段');
+  assert.equal(diag.status, status, 'diag.status 与 getStatus 一致');
+
+  // ---- 断言 4：popup 读回时拿到的是刚写入的值（队列串行的结果）----
+  const readBack = await chromeStub.runtime.sendMessage({ type: 'GET_SETTINGS' });
+  assert.equal(readBack.settings.capturePath, 'snapshot');
+  assert.equal(readBack.settings.outputGain, 1.35);
+});
+
+test('P4-2 行为：依赖缺失随诊断回到 popup 的连接状态行', () => {
+  const start = popup.indexOf('  function diagFill(');
+  const end = popup.indexOf('  function renderDiagnostics()');
+  assert.ok(start > 0 && end > start);
+  const block = popup.slice(start, end);
+  const ctx = {
+    EXT_VERSION: '1.2.42',
+    lastConn: { state: 'ok', version: '1.2.42' },
+    lastSave: { state: 'idle', text: '' },
+    lastDiag: {
+      videoTotal: 1, videoIndex: 1, pipelineError: '',
+      depsMissing: ['ToneLutManager', 'LUT_SIZE'],
+      counts: { videos: 1 }, video: null,
+    },
+    t: (k, f) => f,
+    tf: (k, f, vars) => f.replace(/\{(\w+)\}/g, (m, x) => (vars && vars[x] !== undefined ? vars[x] : m)),
+  };
+  ctx.globalThis = ctx;
+  vm.createContext(ctx);
+  vm.runInContext(block + '\nthis.fn = buildDiagRows;', ctx);
+  const row = ctx.fn().find((r) => r.id === 'diagSource');
+  assert.match(row.value, /依赖缺失/);
+  assert.match(row.value, /ToneLutManager/);
+  assert.match(row.value, /LUT_SIZE/);
+
+  // 正常路径（depsMissing 为 null）必须保持原文案，不能被新分支污染
+  ctx.lastDiag.depsMissing = null;
+  vm.runInContext('this.fn = buildDiagRows;', ctx);
+  const normal = ctx.fn().find((r) => r.id === 'diagSource');
+  assert.match(normal.value, /脚本 1\.2\.42/);
+  assert.doesNotMatch(normal.value, /依赖缺失/);
 });
