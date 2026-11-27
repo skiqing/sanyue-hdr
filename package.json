@@ -1,6 +1,6 @@
 {
   "name": "hdr-vision",
-  "version": "1.2.42",
+  "version": "1.2.43",
   "private": true,
   "description": "HDR Vision Chrome extension - dev tooling only (node_modules is not part of the extension bundle)",
   "scripts": {
