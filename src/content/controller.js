@@ -24,6 +24,38 @@ function assertContentDependencies() {
     ImageManager: typeof ImageManager !== 'undefined',
     SharedVideoResources: typeof SharedVideoResources !== 'undefined',
     SharedImageResources: typeof SharedImageResources !== 'undefined',
+    // P4-2：补齐首版遗漏的跨文件依赖。原表只覆盖 17/87，删掉 tone-lut.js
+    // 时断言照样通过，直到 new SharedVideoResources() 才 ReferenceError，
+    // 且被 _ensureManagers 的 catch 吞成泛化错误。这里覆盖所有被实际引用的符号。
+    STATUS: typeof STATUS !== 'undefined',
+    MESSAGE_TYPES: typeof MESSAGE_TYPES !== 'undefined',
+    hdrDisplayQuery: typeof hdrDisplayQuery !== 'undefined',
+    GPU_ERROR_LIMIT: typeof GPU_ERROR_LIMIT !== 'undefined',
+    GPU_ERROR_WINDOW_MS: typeof GPU_ERROR_WINDOW_MS !== 'undefined',
+    GPU_ERROR_RECOVERY_DELAY_MS: typeof GPU_ERROR_RECOVERY_DELAY_MS !== 'undefined',
+    // 注意：这里**不能**放 ADAPTER_OPTIONS。它在 Windows 上合法地取值为
+    // undefined（utils.js 用它抑制 powerPreference 告警），而 typeof 对
+    // 「声明为 undefined」和「根本没有声明」返回同一个值，会把正常平台
+    // 误报成依赖缺失。存在性探针只适用于「一定有值」的符号；utils.js 的
+    // 覆盖由 isSameOriginUrl / probeSource / isDRMProtected 保证。
+    isSameOriginUrl: typeof isSameOriginUrl !== 'undefined',
+    UNIFORM_FLOATS: typeof UNIFORM_FLOATS !== 'undefined',
+    LUT_SIZE: typeof LUT_SIZE !== 'undefined',
+    ToneLutManager: typeof ToneLutManager !== 'undefined',
+    videoShaderCode: typeof videoShaderCode !== 'undefined',
+    videoShaderCodeCopy: typeof videoShaderCodeCopy !== 'undefined',
+    imageShaderCode: typeof imageShaderCode !== 'undefined',
+    reportShaderErrors: typeof reportShaderErrors !== 'undefined',
+    createPipelineChecked: typeof createPipelineChecked !== 'undefined',
+    createPipelineCheckedAsync: typeof createPipelineCheckedAsync !== 'undefined',
+    invalidPipelines: typeof invalidPipelines !== 'undefined',
+    pickTier: typeof pickTier !== 'undefined',
+    countRenderersInTier: typeof countRenderersInTier !== 'undefined',
+    debouncedScan: typeof debouncedScan !== 'undefined',
+    startNijiPolling: typeof startNijiPolling !== 'undefined',
+    stopNijiPolling: typeof stopNijiPolling !== 'undefined',
+    VIDEO_CONCURRENCY_TIERS: typeof VIDEO_CONCURRENCY_TIERS !== 'undefined',
+    IMAGE_CONCURRENCY_TIERS: typeof IMAGE_CONCURRENCY_TIERS !== 'undefined',
   };
   const missing = Object.keys(checks).filter((name) => !checks[name]);
   if (missing.length) {
@@ -631,6 +663,9 @@ class HDRController {
         ? active.readDiagnostics()
         : null,
       images: im?.isEnabled ? (im.renderers?.size || 0) : 0,
+      // P4-2：依赖断言结果进入诊断，缺文件/改顺序时 popup 能直接看到名字，
+      // 不必去翻控制台。正常时为 null，不改变既有消费方行为。
+      depsMissing: CONTENT_DEPS_MISSING.length ? CONTENT_DEPS_MISSING.slice() : null,
     };
   }
 
