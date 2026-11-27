@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>卅月 HDR — Perfect HDR, Awakened in Your Browser.</title>
+  <meta name="description" content="基于 WebGPU 的 Chrome 扩展，实时提升网页视频与图片的 HDR 观感。完全本地处理，不上传任何数据。">
+  <style>
+    :root {
+      --bg: #0b0f15;
+      --surface: #141a23;
+      --card: #1a212c;
+      --text: #e8eef5;
+      --muted: #8899aa;
+      --accent: #14b8a6;
+      --accent-dim: #0d9488;
+      --border: #263140;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+    /* Header */
+    header { padding: 64px 0 48px; text-align: center; border-bottom: 1px solid var(--border); }
+    .logo { width: 96px; height: 96px; margin: 0 auto 20px; display: block; }
+    h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.5px; }
+    .tagline { font-size: 16px; color: var(--accent); margin-top: 8px; font-weight: 500; }
+    .desc { font-size: 15px; color: var(--muted); max-width: 600px; margin: 16px auto 28px; }
+    .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .badge {
+      display: inline-block; padding: 5px 12px; border-radius: 999px;
+      border: 1px solid var(--border); color: var(--muted); font-size: 12px;
+    }
+    .badge.accent { border-color: var(--accent-dim); color: var(--accent); }
+
+    /* Sections */
+    section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+    h2 { font-size: 24px; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px;
+    }
+    .card h3 { font-size: 16px; color: var(--accent); margin-bottom: 8px; }
+    .card p { font-size: 13.5px; color: var(--muted); }
+
+    /* Pipeline */
+    .pipeline {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+      font-size: 13px; color: var(--muted); overflow-x: auto;
+    }
+    .pipeline .step { color: var(--text); }
+    .pipeline .arrow { color: var(--accent); padding: 0 8px; }
+
+    /* Install */
+    .steps { counter-reset: step; list-style: none; }
+    .steps li {
+      counter-increment: step; position: relative; padding-left: 44px;
+      margin-bottom: 18px; font-size: 14px; color: var(--muted);
+    }
+    .steps li::before {
+      content: counter(step); position: absolute; left: 0; top: 1px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--accent-soft, rgba(20,184,166,0.12));
+      border: 1px solid var(--accent-dim); color: var(--accent);
+      display: flex; align-items: center; justify-content: center; font-weight: 700;
+    }
+    code {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 2px 6px; border-radius: 5px; font-size: 13px; color: var(--accent);
+    }
+
+    /* Footer */
+    footer { padding: 40px 0; text-align: center; color: var(--muted); font-size: 13px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .center { text-align: center; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <img src="icon128.png" alt="卅月 HDR" class="logo">
+      <h1>卅月 HDR</h1>
+      <p class="tagline">Perfect HDR, Awakened in Your Browser.</p>
+      <p class="desc">基于 WebGPU 的 Chrome 扩展，实时提升网页视频与图片的 HDR 观感。全部处理在本地 GPU 完成，不收集、不上传任何数据。</p>
+      <div class="badges">
+        <span class="badge accent">WebGPU</span>
+        <span class="badge">Chrome 116+</span>
+        <span class="badge">MIT License</span>
+        <span class="badge">100% 本地处理</span>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>功能</h2>
+      <div class="grid">
+        <div class="card"><h3>实时 HDR 增强</h3><p>GPU 上逐帧色调映射，支持 BT.2446a 标准曲线与自定义幂函数。</p></div>
+        <div class="card"><h3>双层合成</h3><p>分离低频亮度与高频细节，压高光时保留局部对比。</p></div>
+        <div class="card"><h3>HDR 源智能处理</h3><p>PQ / HLG 视频可接管增强，也可原样跳过交给系统播放。</p></div>
+        <div class="card"><h3>去色带与锐化</h3><p>多尺度自适应 deband 与 CAS 锐化，按需二选一。</p></div>
+        <div class="card"><h3>取帧自适应</h3><p>常规源零拷贝，补齐帧自动切快照规避顶部绿边。</p></div>
+        <div class="card"><h3>诊断面板</h3><p>一键复制取帧路径、绿边检测、HDR 路径等状态，问题可自证。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>渲染管线</h2>
+      <div class="pipeline">
+        <span class="step">视频帧</span><span class="arrow">→</span>
+        <span class="step">external texture / 2D snapshot</span><br>
+        <span class="arrow">↓</span><br>
+        <span class="step">色调映射</span><span class="arrow">（</span>BT.2446a / 幂函数<span class="arrow">）</span><br>
+        <span class="arrow">↓</span><br>
+        <span class="step">双层合成</span><span class="arrow">（可选）</span><br>
+        <span class="arrow">↓</span><br>
+        <span class="step">高光上限 / 整体强度</span><br>
+        <span class="arrow">↓</span><br>
+        <span class="step">16float HDR 画布</span><span class="arrow">或</span><span class="step">8bit 画布</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>安装</h2>
+      <ol class="steps">
+        <li>克隆仓库：<code>git clone https://github.com/skiqing/sanyue-hdr.git</code></li>
+        <li>打开 Chrome，进入 <code>chrome://extensions</code></li>
+        <li>开启右上角的「开发者模式」</li>
+        <li>点击「加载已解压的扩展程序」，选择仓库根目录</li>
+        <li>点击工具栏图标打开弹窗，用顶部开关启用</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap center">
+      <h2>开源</h2>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">
+        源代码以 MIT 协议开放，欢迎 issue 与 pull request。
+      </p>
+      <div class="badges" style="justify-content:center;">
+        <a class="badge accent" href="https://github.com/skiqing/sanyue-hdr">GitHub 仓库</a>
+        <a class="badge" href="privacy-policy.html">隐私政策</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      © 2026 卅月 · MIT License · 完全本地处理，不收集任何数据
+    </div>
+  </footer>
+</body>
+</html>
